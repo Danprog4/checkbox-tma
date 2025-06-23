@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import mapImage from "./assets/map.png";
+import { Map } from "./components/Map";
 import { zone1Partners, zone2Partners } from "./parthers-config";
 import type { Partner } from "./types/parther";
 import { PressZoneHeader } from "./components/PressZoneHeader";
@@ -36,11 +36,7 @@ function App() {
         </div>
 
         <div className="relative px-[10px] mb-5">
-          <img
-            src={mapImage}
-            alt="map"
-            className="w-full h-full object-cover rounded-xl"
-          />
+          <Map />
 
           <div className="text-white absolute text-wrap max-w-10 top-4 left-7 font-bold text-[28px] leading-none">
             Карта площадки
