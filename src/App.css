@@ -17,7 +17,7 @@ html,
 body {
 }
 
-/* Prevent pull-to-refresh and overscroll behavior */
 body {
   overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
