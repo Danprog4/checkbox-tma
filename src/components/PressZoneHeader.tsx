@@ -21,7 +21,7 @@ export const PressZoneHeader = ({
     <div className="rounded-[7px] p-4 flex items-center justify-between bg-gradient-to-r from-[#20A261] to-[#1C5C45]">
       <div className="flex flex-col gap-3">
         <div className="bg-black py-[6px] w-[95px] flex items-center justify-center rounded-full">
-          <span className="text-white text-xs font-bold uppercase">
+          <span className="text-white leading-none text-xs font-bold uppercase">
             PRESS ZONE
           </span>
         </div>
