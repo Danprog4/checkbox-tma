@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
 body {
-  overflow: hidden;
+  font-family: "Involve";
 }
 
-html {
-  overflow: hidden;
+@font-face {
+  font-family: "Involve";
+  src: url("/fonts/Involve-VF.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }

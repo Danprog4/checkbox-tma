@@ -27,10 +27,10 @@ function App() {
   };
 
   return (
-    <div className="bg-[#20A261] min-h-screen w-screen px-4 py-4 overflow-y-hidden overflow-x-hidden">
+    <div className="bg-[#20A261] min-h-screen w-screen px-4 py-4 overflow-y-auto overflow-x-hidden">
       <div className="bg-black h-full max-w-screen rounded-xl">
         <div className="text-center flex justify-center py-9 px-[35px]">
-          <div className="text-white text-nowrap text-4xl font-bold uppercase tracking-wide">
+          <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
             список стендов
           </div>
         </div>
