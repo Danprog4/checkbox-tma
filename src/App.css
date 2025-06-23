@@ -12,11 +12,6 @@ body {
   font-display: swap;
 }
 
-/* Disable Telegram Mini App scrolling */
-html,
-body {
-}
-
 body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
