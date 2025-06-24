@@ -86,12 +86,12 @@ function App() {
 
     const pressZoneHeaders = standsData.filter(
       (stand: Stand) =>
-        stand.category.length > 2 && stand.category !== "Afterparty"
+        stand.category.length > 3 && stand.category !== "Afterparty"
     );
 
     const partnerItems = standsData.filter(
       (stand: Stand) =>
-        stand.category.length <= 2 && stand.category !== "Afterparty"
+        stand.category.length <= 3 && stand.category !== "Afterparty"
     );
 
     const groups = [];
