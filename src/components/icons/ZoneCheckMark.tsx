@@ -1,6 +1,6 @@
 export const ZoneCheckMark = () => {
   return (
-    <div className="w-[32px] flex items-center justify-center h-[32px] bg-[#20A261] rounded-lg">
+    <div className="w-[32px] flex items-center justify-center h-[32px] bg-white rounded-lg">
       <svg
         width="17"
         height="13"
