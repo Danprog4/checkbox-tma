@@ -84,7 +84,7 @@ function App() {
   }
 
   return (
-    <div className="bg-black fixed inset-0 pb-0 px-4 pb-4 overflow-hidden">
+    <div className="bg-black fixed inset-0 px-4 overflow-hidden">
       <div className=" relative h-full w-full max-w-screen rounded-b-none rounded-xl overflow-x-hidden overflow-y-auto">
         <div className="text-center flex justify-center pt-9 pb-7 px-[35px]">
           <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
