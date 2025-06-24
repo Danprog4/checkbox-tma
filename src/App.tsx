@@ -41,6 +41,9 @@ function App() {
   }, []);
 
   const initData = import.meta.env.VITE_MOCK_INIT_DATA ?? retrieveRawInitData();
+
+  console.log("Init data:", initData);
+  console.log("Retrieve raw init data:", retrieveRawInitData());
   const user = useQuery({
     queryKey: [authUser.name],
     queryFn: () => authUser(initData),
@@ -85,9 +88,9 @@ function App() {
     }
   };
 
-  if (user.isLoading) {
+  if (user.isLoading || stands.isLoading) {
     return (
-      <div className="bg-[#20A261] min-h-screen w-screen px-4 py-4 flex items-center justify-center">
+      <div className="bg-[#20A261] h-screen w-screen px-4 py-4 flex items-center justify-center">
         <div className="text-white text-xl">Загрузка...</div>
       </div>
     );
