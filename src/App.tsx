@@ -38,7 +38,7 @@ function App() {
 
   const standsData = useMemo(() => stands.data?.data?.stands, [stands.data]);
 
-  console.log("Stands data:", stands.data?.data);
+  console.log("Stands data:", stands.data);
   console.log("User data:", user.data);
 
   const groupedStands = useGroupStands(standsData);
@@ -84,21 +84,11 @@ function App() {
   }
 
   return (
-    <div className="bg-[#20A261] fixed inset-0 pb-0 px-4 py-4 overflow-hidden">
-      <div className="bg-[#20A261] h-4 top-0 left-0 right-0 fixed z-50 "></div>
-
-      <div className="bg-black relative h-full w-full max-w-screen rounded-b-none rounded-xl overflow-x-hidden overflow-y-auto">
-        <div className="text-center flex justify-center py-9 px-[35px]">
+    <div className="bg-black fixed inset-0 pb-0 px-4 pb-4 overflow-hidden">
+      <div className=" relative h-full w-full max-w-screen rounded-b-none rounded-xl overflow-x-hidden overflow-y-auto">
+        <div className="text-center flex justify-center pt-9 pb-7 px-[35px]">
           <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
             список стендов
-          </div>
-        </div>
-
-        <div className="relative px-[10px] mb-5">
-          <Map />
-
-          <div className="text-white absolute text-wrap max-w-10 top-4 left-7 font-bold text-[28px] leading-none">
-            Карта площадки
           </div>
         </div>
 
