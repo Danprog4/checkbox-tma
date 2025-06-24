@@ -45,6 +45,11 @@ function App() {
     }
 
     if (swipeBehavior.mount.isAvailable()) {
+      console.log(
+        "Swipe behavior is available",
+        swipeBehavior.mount.isAvailable(),
+        swipeBehavior.isVerticalEnabled()
+      );
       swipeBehavior.mount();
       swipeBehavior.disableVertical();
     }
