@@ -1,7 +1,7 @@
 import { EmptyCheckMark } from "./icons/EmptyChechMark";
 import { PartnerCheckMark } from "./icons/PartnerCheckMark";
 import coin from "../assets/coin.png";
-import type { Stand } from "../types/parther";
+import type { Stand } from "../types/stand";
 
 export const PartnerItem = ({
   partner,

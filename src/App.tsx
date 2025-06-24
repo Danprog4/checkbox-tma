@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import "./App.css";
 import { Map } from "./components/Map";
-import type { Stand } from "./types/parther";
+import type { Stand } from "./types/stand";
 import { PartnerItem } from "./components/PartnerItem";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authUser, getStands, visitStand, unvisitStand } from "./api";

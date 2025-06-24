@@ -1,4 +1,4 @@
-import type { Partner } from "../types/parther";
+import type { Partner } from "../types/stand";
 
 export const getPartnerCompletionStatus = (
   partner: Partner,
