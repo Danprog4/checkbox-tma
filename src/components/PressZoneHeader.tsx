@@ -17,7 +17,7 @@ export const PressZoneHeader = ({
       onClick={onClick}>
       <div className="flex flex-col gap-2">
         <div className="bg-black py-2 px-2 justify-center flex items-center rounded-full w-fit">
-          <span className="text-white leading-none text-xs pt-[1px] font-bold uppercase whitespace-nowrap">
+          <span className="text-white leading-none text-xs pt-[1.5px] font-bold uppercase whitespace-nowrap">
             {stand.category}
           </span>
         </div>
