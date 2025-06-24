@@ -37,7 +37,7 @@ function App() {
       });
     }
 
-    // init();
+    init();
   }, []);
 
   const initData = import.meta.env.VITE_MOCK_INIT_DATA ?? retrieveRawInitData();
