@@ -44,6 +44,8 @@ function App() {
       });
     }
 
+    init();
+
     if (swipeBehavior.mount.isAvailable()) {
       console.log(
         "Swipe behavior is available",
@@ -53,8 +55,6 @@ function App() {
       swipeBehavior.mount();
       swipeBehavior.disableVertical();
     }
-
-    init();
   }, []);
 
   const initData = import.meta.env.VITE_MOCK_INIT_DATA ?? retrieveRawInitData();
