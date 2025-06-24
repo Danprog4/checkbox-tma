@@ -18,7 +18,7 @@ export const PartnerItem = ({
     <div className="bg-[#262626] rounded-[7px] p-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full flex items-center justify-center text-[#20A261] font-bold border-2 border-[#20A261]">
-          {partner.id}
+          {partner.category.slice(0, 2)}
         </div>
         <span className="text-white text-lg font-semibold">{partner.name}</span>
       </div>

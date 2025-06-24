@@ -5,7 +5,12 @@ import type { Stand } from "./types/stand";
 import { PartnerItem } from "./components/PartnerItem";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authUser, getStands, visitStand, unvisitStand } from "./api";
-import { init, mockTelegramEnv, retrieveRawInitData } from "@telegram-apps/sdk";
+import {
+  init,
+  mockTelegramEnv,
+  retrieveRawInitData,
+  swipeBehavior,
+} from "@telegram-apps/sdk";
 import { PressZoneHeader } from "./components/PressZoneHeader";
 import { AfterParty } from "./components/AfterParty";
 
@@ -39,6 +44,11 @@ function App() {
       });
     }
 
+    if (swipeBehavior.mount.isAvailable()) {
+      swipeBehavior.mount();
+      swipeBehavior.disableVertical();
+    }
+
     init();
   }, []);
 
@@ -65,6 +75,35 @@ function App() {
 
   console.log("Stands data:", stands.data?.data);
   console.log("User data:", user.data);
+
+  const groupedStands = useMemo(() => {
+    if (!standsData) return { groups: [], afterPartyStands: [] };
+
+    const pressZoneHeaders = standsData.filter(
+      (stand: Stand) =>
+        stand.category.length > 2 && stand.category !== "Afterparty"
+    );
+
+    const partnerItems = standsData.filter(
+      (stand: Stand) =>
+        stand.category.length <= 2 && stand.category !== "Afterparty"
+    );
+
+    const groups = [];
+    for (let i = 0; i < pressZoneHeaders.length; i++) {
+      const group = {
+        header: pressZoneHeaders[i],
+        partners: partnerItems.slice(i * 1, (i + 1) * 1),
+      };
+      groups.push(group);
+    }
+
+    const afterPartyStands = standsData.filter(
+      (stand: Stand) => stand.category === "Afterparty"
+    );
+
+    return { groups, afterPartyStands };
+  }, [standsData]);
 
   const visitStandMutation = useMutation({
     mutationFn: (standId: number) => visitStand(token, standId),
@@ -126,59 +165,58 @@ function App() {
         <div className="space-y-10 pb-24 px-[10px]">
           <div className="space-y-3">
             <div className="space-y-2">
-              {standsData
-                ?.filter(
-                  (stand: Stand) =>
-                    stand.category.length <= 2 &&
-                    stand.category !== "Afterparty"
+              {groupedStands.groups.map(
+                (
+                  group: { header: Stand; partners: Stand[] },
+                  index: number
+                ) => (
+                  <div key={`group-${index}`} className="space-y-2">
+                    <PressZoneHeader
+                      stand={group.header}
+                      isVisited={
+                        queryClient.getQueryData([
+                          visitStand.name,
+                          group.header.id,
+                        ]) ??
+                        group.header.is_visited ??
+                        false
+                      }
+                      onClick={() => handleVisitStand(group.header.id)}
+                    />
+                    {group.partners.map((stand: Stand) => (
+                      <PartnerItem
+                        key={`partner-${stand.id}`}
+                        partner={stand}
+                        isJetton={true}
+                        isVisited={
+                          queryClient.getQueryData([
+                            visitStand.name,
+                            stand.id,
+                          ]) ??
+                          stand.is_visited ??
+                          false
+                        }
+                        onClick={() => handleVisitStand(stand.id)}
+                      />
+                    ))}
+                  </div>
                 )
-                .map((stand: Stand) => (
-                  <PartnerItem
-                    key={`stand-${stand.id}`}
-                    partner={stand}
-                    isJetton={true}
-                    isVisited={
-                      queryClient.getQueryData([visitStand.name, stand.id]) ??
-                      stand.is_visited ??
-                      false
-                    }
-                    onClick={() => handleVisitStand(stand.id)}
-                  />
-                ))}
-              {standsData
-                ?.filter(
-                  (stand: Stand) =>
-                    stand.category.length > 2 && stand.category !== "Afterparty"
-                )
-                .map((stand: Stand) => (
-                  <PressZoneHeader
-                    key={`stand-${stand.id}`}
-                    stand={stand}
-                    isVisited={
-                      queryClient.getQueryData([visitStand.name, stand.id]) ??
-                      stand.is_visited ??
-                      false
-                    }
-                    onClick={() => handleVisitStand(stand.id)}
-                  />
-                ))}
+              )}
 
               <AfterParty stands={standsData} />
-              {standsData
-                ?.filter((stand: Stand) => stand.category === "Afterparty")
-                .map((stand: Stand) => (
-                  <PartnerItem
-                    key={`stand-${stand.id}`}
-                    partner={stand}
-                    isJetton={false}
-                    isVisited={
-                      queryClient.getQueryData([visitStand.name, stand.id]) ??
-                      stand.is_visited ??
-                      false
-                    }
-                    onClick={() => handleVisitStand(stand.id)}
-                  />
-                ))}
+              {groupedStands.afterPartyStands.map((stand: Stand) => (
+                <PartnerItem
+                  key={`afterparty-${stand.id}`}
+                  partner={stand}
+                  isJetton={false}
+                  isVisited={
+                    queryClient.getQueryData([visitStand.name, stand.id]) ??
+                    stand.is_visited ??
+                    false
+                  }
+                  onClick={() => handleVisitStand(stand.id)}
+                />
+              ))}
             </div>
           </div>
         </div>
