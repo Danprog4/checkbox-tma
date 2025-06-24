@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 export const authUser = async (initData: string) => {
   const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/conference/auth`, {
     init_data: initData,
