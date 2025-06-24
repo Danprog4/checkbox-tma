@@ -1,30 +1,72 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import "./App.css";
 import { Map } from "./components/Map";
-import { zone1Partners, zone2Partners } from "./parthers-config";
-import type { Partner } from "./types/parther";
-import { PressZoneHeader } from "./components/PressZoneHeader";
+import type { Stand } from "./types/parther";
 import { PartnerItem } from "./components/PartnerItem";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { authUser, getStands, visitStand, unvisitStand } from "./api";
+import { PressZoneHeader } from "./components/PressZoneHeader";
 
 function App() {
-  const [isCompleted, setIsCompleted] = useState<
-    {
-      id: number;
-      isCompleted: boolean;
-    }[]
-  >([]);
+  const user = useQuery({
+    queryKey: [authUser.name],
+    queryFn: () => authUser(import.meta.env.VITE_MOCK_INIT_DATA),
+  });
 
-  const handlePartnerClick = (partner: Partner) => {
-    const isPartnerCompleted = isCompleted.find(
-      (item) => item.id === partner.id
-    );
+  const queryClient = useQueryClient();
 
-    if (isPartnerCompleted || partner.isCompleted) {
-      return;
+  const token = useMemo(() => user.data?.access_token, [user.data]);
+
+  const stands = useQuery({
+    queryKey: [getStands.name],
+    queryFn: () => getStands(token),
+    enabled: !!token,
+  });
+
+  const standsData = useMemo(() => stands.data?.data?.stands, [stands.data]);
+
+  console.log("Stands data:", stands.data?.data);
+  console.log("User data:", user.data);
+
+  const visitStandMutation = useMutation({
+    mutationFn: (standId: number) => visitStand(token, standId),
+  });
+
+  const unvisitStandMutation = useMutation({
+    mutationFn: (standId: number) => unvisitStand(token, standId),
+  });
+
+  const handleVisitStand = (standId: number) => {
+    const stand = standsData?.find((s: Stand) => s.id === standId);
+    const isCurrentlyVisited =
+      queryClient.getQueryData([visitStand.name, standId]) ??
+      stand?.is_visited ??
+      false;
+
+    if (isCurrentlyVisited) {
+      queryClient.setQueryData([visitStand.name, standId], false);
+      unvisitStandMutation.mutate(standId);
     } else {
-      setIsCompleted([...isCompleted, { id: partner.id, isCompleted: true }]);
+      queryClient.setQueryData([visitStand.name, standId], true);
+      visitStandMutation.mutate(standId);
     }
   };
+
+  if (user.isLoading) {
+    return (
+      <div className="bg-[#20A261] min-h-screen w-screen px-4 py-4 flex items-center justify-center">
+        <div className="text-white text-xl">Загрузка...</div>
+      </div>
+    );
+  }
+
+  if (user.error) {
+    return (
+      <div className="bg-[#20A261] min-h-screen w-screen px-4 py-4 flex items-center justify-center">
+        <div className="text-white text-xl">Ошибка авторизации</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#20A261] min-h-screen w-screen px-4 py-4 overflow-y-auto overflow-x-hidden">
@@ -43,38 +85,27 @@ function App() {
           </div>
         </div>
 
-        <div className="space-y-10  pb-24 px-[10px]">
+        <div className="space-y-10 pb-24 px-[10px]">
           <div className="space-y-3">
-            <PressZoneHeader
-              partners={zone1Partners}
-              isCompleted={isCompleted}
-            />
-            <div className="space-y-2">
-              {zone1Partners.map((partner) => (
-                <PartnerItem
-                  key={`col1-${partner.id}`}
-                  partner={partner}
-                  isCompleted={isCompleted}
-                  isJetton={partner.isJetton}
-                  onClick={() => handlePartnerClick(partner)}
+            {/* {standsData &&
+              standsData.map((stand: Stand) => (
+                <PressZoneHeader
+                  key={`stand-${stand.id}`}
+                  category={stand.category}
                 />
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <PressZoneHeader
-              partners={zone2Partners}
-              isCompleted={isCompleted}
-            />
+              ))} */}
             <div className="space-y-2">
-              {zone2Partners.map((partner) => (
+              {standsData?.map((stand: Stand) => (
                 <PartnerItem
-                  key={`col2-${partner.id}`}
-                  partner={partner}
-                  isCompleted={isCompleted}
-                  isJetton={partner.isJetton}
-                  onClick={() => handlePartnerClick(partner)}
+                  key={`stand-${stand.id}`}
+                  partner={stand}
+                  isVisited={
+                    queryClient.getQueryData([visitStand.name, stand.id]) ??
+                    stand.is_visited ??
+                    false
+                  }
+                  isJetton={true}
+                  onClick={() => handleVisitStand(stand.id)}
                 />
               ))}
             </div>

@@ -1,6 +1,9 @@
-export interface Partner {
+
+
+export interface Stand {
   id: number;
   name: string;
-  isCompleted: boolean;
-  isJetton: boolean;
+  description: string;
+  is_visited: boolean;
+  category: string;
 }

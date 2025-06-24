@@ -1,21 +1,20 @@
-import type { Partner } from "../types/parther";
 import { getPartnerCompletionStatus } from "../utils/getPartnerCompletionStatus";
 import { EmptyCheckMark } from "./icons/EmptyChechMark";
 import { PartnerCheckMark } from "./icons/PartnerCheckMark";
 import coin from "../assets/coin.png";
+import type { Stand } from "../types/parther";
+
 export const PartnerItem = ({
   partner,
-  isCompleted,
   isJetton,
   onClick,
+  isVisited,
 }: {
-  partner: Partner;
-  isCompleted: { id: number; isCompleted: boolean }[];
+  partner: Stand;
   isJetton: boolean;
-  onClick: (partner: Partner) => void;
+  onClick: (partner: Stand) => void;
+  isVisited: boolean;
 }) => {
-  const isPartnerCompleted = getPartnerCompletionStatus(partner, isCompleted);
-
   return (
     <div className="bg-[#262626] rounded-[7px] p-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -29,7 +28,7 @@ export const PartnerItem = ({
         onClick={() => onClick(partner)}
         className="cursor-pointer flex items-center gap-5">
         {isJetton ? <img src={coin} alt="coin" className="w-8 h-8" /> : null}
-        {isPartnerCompleted ? <PartnerCheckMark /> : <EmptyCheckMark />}
+        {isVisited ? <PartnerCheckMark /> : <EmptyCheckMark />}
       </div>
     </div>
   );
