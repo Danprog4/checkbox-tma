@@ -5,58 +5,18 @@ import type { Stand } from "./types/stand";
 import { PartnerItem } from "./components/PartnerItem";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authUser, getStands, visitStand, unvisitStand } from "./api";
-import {
-  init,
-  mockTelegramEnv,
-  retrieveRawInitData,
-  swipeBehavior,
-} from "@telegram-apps/sdk";
+import { retrieveRawInitData } from "@telegram-apps/sdk";
 import { PressZoneHeader } from "./components/PressZoneHeader";
 import { AfterParty } from "./components/AfterParty";
+import { Loader } from "./components/Loader";
+import { useInitTg } from "./hooks/useInitTg";
+
+type LayoutItem =
+  | { type: "big"; header: Stand }
+  | { type: "small"; partners: Stand[] };
 
 function App() {
-  useEffect(() => {
-    const themeParams = {
-      accent_text_color: "#6ab2f2",
-      bg_color: "#17212b",
-      button_color: "#5288c1",
-      button_text_color: "#ffffff",
-      destructive_text_color: "#ec3942",
-      header_bg_color: "#17212b",
-      hint_color: "#708499",
-      link_color: "#6ab3f3",
-      secondary_bg_color: "#232e3c",
-      section_bg_color: "#17212b",
-      section_header_text_color: "#6ab3f3",
-      subtitle_text_color: "#708499",
-      text_color: "#f5f5f5",
-    } as const;
-
-    if (import.meta.env.DEV) {
-      mockTelegramEnv({
-        launchParams: {
-          tgWebAppPlatform: "web",
-          tgWebAppVersion: "8.0.0",
-          tgWebAppData: import.meta.env.VITE_MOCK_INIT_DATA,
-          tgWebAppThemeParams: themeParams,
-          tgWebAppStartParam: "ref=3",
-        },
-      });
-    }
-
-    init();
-
-    if (swipeBehavior.mount.isAvailable()) {
-      console.log(
-        "Swipe behavior is available",
-        swipeBehavior.mount.isAvailable(),
-        swipeBehavior.isVerticalEnabled()
-      );
-      swipeBehavior.mount();
-      swipeBehavior.disableVertical();
-    }
-  }, []);
-
+  useInitTg();
   const initData = import.meta.env.VITE_MOCK_INIT_DATA ?? retrieveRawInitData();
 
   console.log("Init data:", initData);
@@ -82,32 +42,114 @@ function App() {
   console.log("User data:", user.data);
 
   const groupedStands = useMemo(() => {
-    if (!standsData) return { groups: [], afterPartyStands: [] };
-
-    const pressZoneHeaders = standsData.filter(
-      (stand: Stand) =>
-        stand.category.length > 3 && stand.category !== "Afterparty"
-    );
-
-    const partnerItems = standsData.filter(
-      (stand: Stand) =>
-        stand.category.length <= 3 && stand.category !== "Afterparty"
-    );
-
-    const groups = [];
-    for (let i = 0; i < pressZoneHeaders.length; i++) {
-      const group = {
-        header: pressZoneHeaders[i],
-        partners: partnerItems.slice(i, i + 1),
+    if (!standsData)
+      return { layout: [], afterPartyStands: [] } as {
+        layout: LayoutItem[];
+        afterPartyStands: Stand[];
       };
-      groups.push(group);
-    }
 
     const afterPartyStands = standsData.filter(
       (stand: Stand) => stand.category === "Afterparty"
     );
 
-    return { groups, afterPartyStands };
+    const regularStands = standsData.filter(
+      (stand: Stand) => stand.category !== "Afterparty"
+    );
+
+    // Малые стенды имеют формат "Буква + цифры" (A1, A12, М4 ...)
+    const smallRegex = /^[A-Za-zА-Яа-я]\d+$/;
+
+    const partners = regularStands.filter((stand: Stand) =>
+      smallRegex.test(stand.category)
+    );
+
+    const bigHeaders = regularStands.filter(
+      (stand: Stand) => !smallRegex.test(stand.category)
+    );
+
+    // Нормализуем букву сектора (латиница/кириллица)
+    const CYRILLIC_TO_LATIN: Record<string, string> = {
+      А: "A",
+      В: "B",
+      С: "C",
+      Е: "E",
+      Н: "H",
+      К: "K",
+      М: "M",
+      О: "O",
+      Р: "P",
+      Т: "T",
+      Х: "X",
+      У: "Y",
+    };
+
+    const normalizeLetter = (letter: string) => {
+      const upper = letter.toUpperCase();
+      return CYRILLIC_TO_LATIN[upper] ?? upper;
+    };
+
+    const getSectorLetter = (category: string) =>
+      normalizeLetter(category.charAt(0));
+
+    // 1. Группируем маленькие стенды по первой букве
+    const letterGroupsMap = new globalThis.Map<string, Stand[]>();
+    partners.forEach((p: Stand) => {
+      const letter = getSectorLetter(p.category);
+      if (!letterGroupsMap.has(letter)) {
+        letterGroupsMap.set(letter, []);
+      }
+      letterGroupsMap.get(letter)!.push(p);
+    });
+
+    // Числовая сортировка внутри группы
+    const comparePartners = (a: Stand, b: Stand) => {
+      const numA = parseInt(a.category.slice(1));
+      const numB = parseInt(b.category.slice(1));
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      return a.category.localeCompare(b.category);
+    };
+
+    const lettersSorted = Array.from<string>(letterGroupsMap.keys()).sort(
+      (a: string, b: string) => a.localeCompare(b)
+    );
+
+    const smallGroups = lettersSorted.map((letter) => ({
+      letter,
+      partners: letterGroupsMap.get(letter)!.sort(comparePartners),
+    }));
+
+    // 2. Сортируем большие стенды по категории (можно изменить критерий)
+    const bigSorted = [...bigHeaders].sort((a: Stand, b: Stand) =>
+      a.category.localeCompare(b.category)
+    );
+
+    // 3. Чередуем блоками: 4 больших → 1 группа маленьких → 4 больших → ...
+    const layout: LayoutItem[] = [];
+    let bigPtr = 0;
+    let smallPtr = 0;
+
+    while (bigPtr < bigSorted.length || smallPtr < smallGroups.length) {
+      // Добавляем до 4 больших стендов
+      const chunkEnd = Math.min(bigPtr + 3, bigSorted.length);
+      for (let i = bigPtr; i < chunkEnd; i++) {
+        layout.push({ type: "big", header: bigSorted[i] });
+      }
+      bigPtr = chunkEnd;
+
+      // Затем одну группу маленьких, если осталось
+      if (smallPtr < smallGroups.length) {
+        layout.push({
+          type: "small",
+          partners: smallGroups[smallPtr].partners,
+        });
+        smallPtr++;
+      }
+    }
+
+    return { layout, afterPartyStands } as {
+      layout: LayoutItem[];
+      afterPartyStands: Stand[];
+    };
   }, [standsData]);
 
   const visitStandMutation = useMutation({
@@ -136,8 +178,8 @@ function App() {
 
   if (user.isLoading || stands.isLoading) {
     return (
-      <div className="bg-[#20A261] h-screen w-screen px-4 py-4 flex items-center justify-center">
-        <div className="text-white text-xl">Загрузка...</div>
+      <div className="bg-black h-screen w-screen px-4 py-4 flex items-center justify-center">
+        <Loader />
       </div>
     );
   }
@@ -170,40 +212,40 @@ function App() {
         <div className="space-y-10 pb-24 px-[10px]">
           <div className="space-y-3">
             <div className="space-y-2">
-              {groupedStands.groups.map(
-                (
-                  group: { header: Stand; partners: Stand[] },
-                  index: number
-                ) => (
-                  <div key={`group-${index}`} className="space-y-2">
-                    <PressZoneHeader
-                      stand={group.header}
-                      isVisited={
-                        queryClient.getQueryData([
-                          visitStand.name,
-                          group.header.id,
-                        ]) ??
-                        group.header.is_visited ??
-                        false
-                      }
-                      onClick={() => handleVisitStand(group.header.id)}
-                    />
-                    {group.partners.map((stand: Stand) => (
-                      <PartnerItem
-                        key={`partner-${stand.id}`}
-                        partner={stand}
-                        isJetton={true}
+              {(groupedStands.layout ?? []).map(
+                (segment: LayoutItem, index: number) => (
+                  <div key={`segment-${index}`} className="space-y-2">
+                    {segment.type === "big" ? (
+                      <PressZoneHeader
+                        stand={segment.header}
                         isVisited={
                           queryClient.getQueryData([
                             visitStand.name,
-                            stand.id,
+                            segment.header.id,
                           ]) ??
-                          stand.is_visited ??
+                          segment.header.is_visited ??
                           false
                         }
-                        onClick={() => handleVisitStand(stand.id)}
+                        onClick={() => handleVisitStand(segment.header.id)}
                       />
-                    ))}
+                    ) : (
+                      segment.partners.map((stand: Stand) => (
+                        <PartnerItem
+                          key={`partner-${stand.id}`}
+                          partner={stand}
+                          isJetton={true}
+                          isVisited={
+                            queryClient.getQueryData([
+                              visitStand.name,
+                              stand.id,
+                            ]) ??
+                            stand.is_visited ??
+                            false
+                          }
+                          onClick={() => handleVisitStand(stand.id)}
+                        />
+                      ))
+                    )}
                   </div>
                 )
               )}
