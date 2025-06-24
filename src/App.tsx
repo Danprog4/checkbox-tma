@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import "./App.css";
 import { Map } from "./components/Map";
 import type { Stand } from "./types/stand";
