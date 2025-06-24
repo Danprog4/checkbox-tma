@@ -1,4 +1,3 @@
-import { getPartnerCompletionStatus } from "../utils/getPartnerCompletionStatus";
 import { EmptyCheckMark } from "./icons/EmptyChechMark";
 import { PartnerCheckMark } from "./icons/PartnerCheckMark";
 import coin from "../assets/coin.png";
