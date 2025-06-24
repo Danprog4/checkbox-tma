@@ -87,7 +87,7 @@ function App() {
     <div className="bg-[#20A261] fixed inset-0 px-4 py-4 overflow-hidden">
       <div className="bg-[#20A261] h-4 top-0 left-0 right-0 fixed z-50 "></div>
 
-      <div className="bg-black relative h-full w-full max-w-screen rounded-xl overflow-x-hidden overflow-y-auto">
+      <div className="bg-black relative h-full w-full max-w-screen rounded-b-none rounded-xl overflow-x-hidden overflow-y-auto">
         <div className="text-center flex justify-center py-9 px-[35px]">
           <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
             список стендов
