@@ -16,12 +16,12 @@ export const PressZoneHeader = ({
       className="rounded-[7px] p-4 flex items-center justify-between bg-gradient-to-r from-[#20A261] to-[#1C5C45]"
       onClick={onClick}>
       <div className="  flex flex-col gap-3">
-        <div className="bg-black py-[6px] text-nowrap w-[128px] flex items-center justify-center rounded-full">
-          <span className="text-white mt-0.5 leading-none text-xs font-bold uppercase">
-            {stand.name}
+        <div className="bg-black py-[6px] px-4 flex items-center justify-center rounded-full min-w-[134px] w-fit">
+          <span className="text-white mt-0.5 leading-none text-xs font-bold uppercase whitespace-nowrap">
+            {stand.category}
           </span>
         </div>
-        <span className="text-white text-2xl font-bold"> {stand.category}</span>
+        <span className="text-white text-2xl font-bold"> {stand.name}</span>
       </div>
       {isVisited ? <ZoneCheckMark /> : <EmptyCheckMark />}
     </div>
