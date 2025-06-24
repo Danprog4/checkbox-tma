@@ -93,7 +93,7 @@ function App() {
     for (let i = 0; i < pressZoneHeaders.length; i++) {
       const group = {
         header: pressZoneHeaders[i],
-        partners: partnerItems.slice(i * 1, (i + 1) * 1),
+        partners: partnerItems.slice(i, i + 1),
       };
       groups.push(group);
     }
