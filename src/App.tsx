@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
 import type { Stand } from "./types/stand";
@@ -9,15 +9,33 @@ import { retrieveRawInitData } from "@telegram-apps/sdk";
 import { PressZoneHeader } from "./components/PressZoneHeader";
 import { AfterParty } from "./components/AfterParty";
 import { Loader } from "./components/Loader";
-import { useInitTg } from "./hooks/useInitTg";
+
 import { useGroupStands } from "./hooks/useGroupStands";
 type LayoutItem =
   | { type: "big"; header: Stand }
   | { type: "small"; partners: Stand[] };
 
 function App() {
-  useInitTg();
-  const initData = import.meta.env.VITE_MOCK_INIT_DATA ?? retrieveRawInitData();
+  const [initData, setInitData] = useState<string>();
+  useEffect(() => {
+    // register listener for account data
+    const onTelegramDataReceived = (event: MessageEvent) => {
+      if (event.data?.type === "TELEGRAM_DATA") {
+        // load account data
+        const webAppData = event.data.payload;
+        setInitData(webAppData);
+        console.log("Web app data:", webAppData);
+      }
+    };
+    window.addEventListener("message", onTelegramDataReceived);
+
+    // request TgTaps to send data to our listener
+    window.parent.postMessage({ type: "REQUEST_TELEGRAM_DATA" }, "*");
+
+    return () => {
+      window.removeEventListener("message", onTelegramDataReceived);
+    };
+  }, []);
 
   console.log("Init data:", initData);
   console.log("Retrieve raw init data:", retrieveRawInitData());
