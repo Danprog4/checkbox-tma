@@ -38,6 +38,7 @@ function App() {
   }, []);
 
   console.log("Init data:", initData);
+  console.log("Init data string:", initData?.initData);
 
   const user = useQuery({
     queryKey: [authUser.name],
