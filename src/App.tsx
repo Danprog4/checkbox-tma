@@ -16,7 +16,7 @@ type LayoutItem =
   | { type: "small"; partners: Stand[] };
 
 function App() {
-  const [initData, setInitData] = useState<string>();
+  const [initData, setInitData] = useState<{ initData?: string }>();
   useEffect(() => {
     // register listener for account data
     const onTelegramDataReceived = (event: MessageEvent) => {
@@ -41,7 +41,7 @@ function App() {
 
   const user = useQuery({
     queryKey: [authUser.name],
-    queryFn: () => authUser(initData as string),
+    queryFn: () => authUser(initData?.initData as string),
   });
 
   const queryClient = useQueryClient();
