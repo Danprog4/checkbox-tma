@@ -41,7 +41,7 @@ function App() {
   console.log("Retrieve raw init data:", retrieveRawInitData());
   const user = useQuery({
     queryKey: [authUser.name],
-    queryFn: () => authUser(initData),
+    queryFn: () => authUser(initData as string),
   });
 
   const queryClient = useQueryClient();
