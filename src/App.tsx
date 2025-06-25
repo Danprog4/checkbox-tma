@@ -5,7 +5,7 @@ import type { Stand } from "./types/stand";
 import { PartnerItem } from "./components/PartnerItem";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authUser, getStands, visitStand, unvisitStand } from "./api";
-import { retrieveRawInitData } from "@telegram-apps/sdk";
+
 import { PressZoneHeader } from "./components/PressZoneHeader";
 import { AfterParty } from "./components/AfterParty";
 import { Loader } from "./components/Loader";
