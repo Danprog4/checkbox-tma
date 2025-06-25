@@ -41,7 +41,7 @@ function App() {
   console.log("Init data string:", initData?.initData);
 
   const user = useQuery({
-    queryKey: [authUser.name],
+    queryKey: [authUser.name, initData?.initData],
     queryFn: () => authUser(initData?.initData as string),
   });
 
@@ -86,7 +86,7 @@ function App() {
     }
   };
 
-  if (user.isLoading || stands.isLoading) {
+  if (!initData?.initData || user.isLoading || stands.isLoading) {
     return (
       <div className="bg-black h-screen w-screen px-4 py-4 flex items-center justify-center">
         <Loader />
