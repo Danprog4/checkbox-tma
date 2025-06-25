@@ -43,7 +43,6 @@ function App() {
   const user = useQuery({
     queryKey: [authUser.name],
     queryFn: () => authUser(initData?.initData as string),
-    enabled: !!initData?.initData,
   });
 
   const queryClient = useQueryClient();
