@@ -84,15 +84,15 @@ function App() {
   }
 
   return (
-    <div className="bg-black fixed inset-0 px-4 overflow-hidden">
+    <div className="bg-black fixed pt-4 inset-0 px-4 overflow-hidden">
       <div className=" relative h-full w-full max-w-screen rounded-b-none rounded-xl overflow-x-hidden overflow-y-auto">
-        <div className="text-center flex justify-center pt-9 pb-7 px-[35px]">
+        {/* <div className="text-center flex justify-center pt-9 pb-7 px-[35px]">
           <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
             список стендов
           </div>
-        </div>
+        </div> */}
 
-        <div className="space-y-10 pb-24 px-[10px]">
+        <div className="space-y-10 pb-24 ">
           <div className="space-y-3">
             <div className="space-y-2">
               {(groupedStands.layout ?? []).map(
