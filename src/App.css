@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-body {
-  font-family: "Involve";
-}
-
 @font-face {
   font-family: "Involve";
   src: url("/fonts/Involve-VF.ttf") format("truetype");
@@ -17,13 +13,14 @@ body,
 #root {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* убираем внутренний скролл */
   height: auto;
+  overflow: visible; /* ✅ это важно */
 }
 
 body {
   font-family: "Involve";
-  min-height: 10000px; /* искусственная длинная страница */
+
+  min-height: 10000px; /* ✅ тянем контент вниз */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
 }
