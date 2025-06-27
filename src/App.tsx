@@ -90,7 +90,7 @@ function App() {
     }
   };
 
-  if (user.isLoading || stands.isLoading) {
+  if (!initData?.initData || user.isLoading || stands.isLoading) {
     return (
       <div className="bg-black h-screen w-screen px-4 py-4 flex items-center justify-center">
         <Loader />
