@@ -18,10 +18,6 @@ type LayoutItem =
   | { type: "small"; partners: Stand[] };
 
 function App() {
-  useInitTg();
-
-  const initData = retrieveRawInitData();
-
   console.log("Init data:", initData);
   console.log("Init data string:", initData);
 
