@@ -11,39 +11,24 @@ import { AfterParty } from "./components/AfterParty";
 import { Loader } from "./components/Loader";
 
 import { useGroupStands } from "./hooks/useGroupStands";
+import { retrieveRawInitData } from "@telegram-apps/sdk";
+import { useInitTg } from "./hooks/useInitTg";
 type LayoutItem =
   | { type: "big"; header: Stand }
   | { type: "small"; partners: Stand[] };
 
 function App() {
-  const [initData, setInitData] = useState<{ initData?: string }>();
-  useEffect(() => {
-    // register listener for account data
-    const onTelegramDataReceived = (event: MessageEvent) => {
-      if (event.data?.type === "TELEGRAM_DATA") {
-        // load account data
-        const webAppData = event.data.payload;
-        setInitData(webAppData);
-        console.log("Web app data:", webAppData);
-      }
-    };
-    window.addEventListener("message", onTelegramDataReceived);
+  useInitTg();
 
-    // request TgTaps to send data to our listener
-    window.parent.postMessage({ type: "REQUEST_TELEGRAM_DATA" }, "*");
-
-    return () => {
-      window.removeEventListener("message", onTelegramDataReceived);
-    };
-  }, []);
+  const initData = retrieveRawInitData();
 
   console.log("Init data:", initData);
-  console.log("Init data string:", initData?.initData);
+  console.log("Init data string:", initData);
 
   const user = useQuery({
-    queryKey: [authUser.name, initData?.initData],
-    queryFn: () => authUser(initData?.initData as string),
-    enabled: !!initData?.initData,
+    queryKey: [authUser.name, initData],
+    queryFn: () => authUser(initData as string),
+    enabled: !!initData,
   });
 
   const queryClient = useQueryClient();
@@ -87,7 +72,7 @@ function App() {
     }
   };
 
-  if (!initData?.initData || user.isLoading || stands.isLoading) {
+  if (user.isLoading || stands.isLoading) {
     return (
       <div className="bg-black h-screen w-screen px-4 py-4 flex items-center justify-center">
         <Loader />
@@ -104,8 +89,14 @@ function App() {
   }
 
   return (
-    <div className="bg-black min-h-screen w-screen overflow-y-hidden px-4 py-4">
-      <div className="space-y-10 pb-24 overflow-y-hidden">
+    <div className="bg-black pt-4  px-4 overflow-y-hidden h-screen">
+      {/* <div className="text-center flex justify-center pt-9 pb-7 px-[35px]">
+          <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
+            список стендов
+          </div>
+        </div> */}
+
+      <div className="space-y-10 pb-24 ">
         <div className="space-y-3">
           <div className="space-y-2">
             {(groupedStands.layout ?? []).map(
