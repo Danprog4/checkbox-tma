@@ -12,23 +12,19 @@ body {
   font-display: swap;
 }
 
-body {
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Убираем внутренний скролл */
 html,
 body,
 #root {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: hidden; /* убираем внутренний скролл */
   height: auto;
 }
 
-/* Сама страница должна растягиваться на большую высоту */
 body {
+  font-family: "Involve";
   background-color: black;
-  min-height: 4000px; /* или сколько нужно */
+  min-height: 10000px; /* искусственная длинная страница */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
