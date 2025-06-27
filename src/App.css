@@ -23,7 +23,6 @@ body,
 
 body {
   font-family: "Involve";
-  background-color: black;
   min-height: 10000px; /* искусственная длинная страница */
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
