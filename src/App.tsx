@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
 import type { Stand } from "./types/stand";
@@ -11,21 +11,43 @@ import { AfterParty } from "./components/AfterParty";
 import { Loader } from "./components/Loader";
 
 import { useGroupStands } from "./hooks/useGroupStands";
-import { retrieveRawInitData } from "@telegram-apps/sdk";
-import { useInitTg } from "./hooks/useInitTg";
+
 type LayoutItem =
   | { type: "big"; header: Stand }
   | { type: "small"; partners: Stand[] };
 
 function App() {
+  const [initData, setInitData] = useState<{ initData?: string }>();
+  useEffect(() => {
+    // register listener for account data
+    const onTelegramDataReceived = (event: MessageEvent) => {
+      if (event.data?.type === "TELEGRAM_DATA") {
+        // load account data
+        const webAppData = event.data.payload;
+        setInitData(webAppData);
+        console.log("Web app data:", webAppData);
+      }
+    };
+    window.addEventListener("message", onTelegramDataReceived);
+
+    // request TgTaps to send data to our listener
+    window.parent.postMessage({ type: "REQUEST_TELEGRAM_DATA" }, "*");
+
+    return () => {
+      window.removeEventListener("message", onTelegramDataReceived);
+    };
+  }, []);
+
   console.log("Init data:", initData);
-  console.log("Init data string:", initData);
+  console.log("Init data string:", initData?.initData);
 
   const user = useQuery({
-    queryKey: [authUser.name, initData],
-    queryFn: () => authUser(initData as string),
-    enabled: !!initData,
+    queryKey: [authUser.name, initData?.initData],
+    queryFn: () => authUser(initData?.initData as string),
+    enabled: !!initData?.initData,
   });
+  console.log("Init data:", initData);
+  console.log("Init data string:", initData);
 
   const queryClient = useQueryClient();
 
