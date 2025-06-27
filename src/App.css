@@ -16,3 +16,19 @@ body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
 }
+
+/* Убираем внутренний скролл */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: auto;
+}
+
+/* Сама страница должна растягиваться на большую высоту */
+body {
+  background-color: black;
+  min-height: 4000px; /* или сколько нужно */
+}
