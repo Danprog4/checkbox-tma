@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
+import "./App.css";
 
 import { useState } from "react";
 import { authUser, getStands, unvisitStand, visitStand } from "./api";
