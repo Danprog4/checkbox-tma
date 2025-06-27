@@ -107,64 +107,59 @@ function App() {
   }
 
   return (
-    <div className="bg-black h-screen w-screen flex flex-col overflow-hidden">
-      <div className="pt-4 px-4">
-        <div className="space-y-10 pb-24">
-          <div className="space-y-3">
-            <div className="space-y-2">
-              {(groupedStands.layout ?? []).map((segment, index) => (
-                <div key={`segment-${index}`} className="space-y-2">
-                  {segment.type === "big" ? (
-                    <PressZoneHeader
-                      stand={segment.header}
+    <div className="flex flex-col h-[50vh]">
+      {/* <div className="space-y-10 pb-24">
+        <div className="space-y-3">
+          <div className="space-y-2">
+            {(groupedStands.layout ?? []).map((segment, index) => (
+              <div key={`segment-${index}`} className="space-y-2">
+                {segment.type === "big" ? (
+                  <PressZoneHeader
+                    stand={segment.header}
+                    isVisited={
+                      queryClient.getQueryData([
+                        visitStand.name,
+                        segment.header.id,
+                      ]) ??
+                      segment.header.is_visited ??
+                      false
+                    }
+                    onClick={() => handleVisitStand(segment.header.id)}
+                  />
+                ) : (
+                  segment.partners.map((stand) => (
+                    <PartnerItem
+                      key={`partner-${stand.id}`}
+                      partner={stand}
+                      isJetton={true}
                       isVisited={
-                        queryClient.getQueryData([
-                          visitStand.name,
-                          segment.header.id,
-                        ]) ??
-                        segment.header.is_visited ??
+                        queryClient.getQueryData([visitStand.name, stand.id]) ??
+                        stand.is_visited ??
                         false
                       }
-                      onClick={() => handleVisitStand(segment.header.id)}
+                      onClick={() => handleVisitStand(stand.id)}
                     />
-                  ) : (
-                    segment.partners.map((stand) => (
-                      <PartnerItem
-                        key={`partner-${stand.id}`}
-                        partner={stand}
-                        isJetton={true}
-                        isVisited={
-                          queryClient.getQueryData([
-                            visitStand.name,
-                            stand.id,
-                          ]) ??
-                          stand.is_visited ??
-                          false
-                        }
-                        onClick={() => handleVisitStand(stand.id)}
-                      />
-                    ))
-                  )}
-                </div>
-              ))}
-              <AfterParty stands={standsData} />
-              {groupedStands.afterPartyStands.map((stand) => (
-                <PartnerItem
-                  key={`afterparty-${stand.id}`}
-                  partner={stand}
-                  isJetton={false}
-                  isVisited={
-                    queryClient.getQueryData([visitStand.name, stand.id]) ??
-                    stand.is_visited ??
-                    false
-                  }
-                  onClick={() => handleVisitStand(stand.id)}
-                />
-              ))}
-            </div>
+                  ))
+                )}
+              </div>
+            ))}
+            <AfterParty stands={standsData} />
+            {groupedStands.afterPartyStands.map((stand) => (
+              <PartnerItem
+                key={`afterparty-${stand.id}`}
+                partner={stand}
+                isJetton={false}
+                isVisited={
+                  queryClient.getQueryData([visitStand.name, stand.id]) ??
+                  stand.is_visited ??
+                  false
+                }
+                onClick={() => handleVisitStand(stand.id)}
+              />
+            ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
