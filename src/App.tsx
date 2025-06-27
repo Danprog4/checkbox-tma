@@ -108,7 +108,7 @@ function App() {
 
   return (
     <div className="bg-black pt-4 px-4 h-[100vh]">
-      <div className=" h-[20000px]">
+      <div className=" h-[50vh]">
         <div className="space-y-10 pb-24 ">
           <div className="space-y-3">
             <div className="space-y-2">
