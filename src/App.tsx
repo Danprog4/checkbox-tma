@@ -100,7 +100,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-[50vh]">
+    <div className="flex flex-col h-screen">
       <div className="space-y-10 pb-24">
         <div className="space-y-3">
           <div className="space-y-2">
