@@ -7,20 +7,3 @@
   font-style: normal;
   font-display: swap;
 }
-
-html,
-body,
-#root {
-  margin: 0;
-  padding: 0;
-  height: auto;
-  overflow: visible; /* ✅ это важно */
-}
-
-body {
-  font-family: "Involve";
-
-  min-height: 10000px; /* ✅ тянем контент вниз */
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-}
