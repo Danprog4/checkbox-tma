@@ -89,7 +89,7 @@ function App() {
 
   if (!initData?.initData || user.isLoading || stands.isLoading) {
     return (
-      <div className="w-full p-4 flex items-center justify-center">
+      <div className="bg-black h-screen w-screen px-4 py-4 flex items-center justify-center">
         <Loader />
       </div>
     );
@@ -97,64 +97,79 @@ function App() {
 
   if (user.error) {
     return (
-      <div className="w-full p-4 flex items-center justify-center">
+      <div className="bg-[#20A261] min-h-screen w-screen px-4 py-4 flex items-center justify-center">
         <div className="text-white text-xl">Ошибка авторизации</div>
       </div>
     );
   }
 
   return (
-    <div className="w-full">
-      <div className="space-y-2">
-        {(groupedStands.layout ?? []).map(
-          (segment: LayoutItem, index: number) => (
-            <div key={`segment-${index}`} className="space-y-2">
-              {segment.type === "big" ? (
-                <PressZoneHeader
-                  stand={segment.header}
+    <div className="bg-black pt-4 px-4 h-auto overflow-visible">
+      <div className="relative h-auto w-full rounded-b-none rounded-xl overflow-visible">
+        {/* <div className="text-center flex justify-center pt-9 pb-7 px-[35px]">
+          <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
+            список стендов
+          </div>
+        </div> */}
+
+        <div className="space-y-10">
+          <div className="space-y-3">
+            <div className="space-y-2">
+              {(groupedStands.layout ?? []).map(
+                (segment: LayoutItem, index: number) => (
+                  <div key={`segment-${index}`} className="space-y-2">
+                    {segment.type === "big" ? (
+                      <PressZoneHeader
+                        stand={segment.header}
+                        isVisited={
+                          queryClient.getQueryData([
+                            visitStand.name,
+                            segment.header.id,
+                          ]) ??
+                          segment.header.is_visited ??
+                          false
+                        }
+                        onClick={() => handleVisitStand(segment.header.id)}
+                      />
+                    ) : (
+                      segment.partners.map((stand: Stand) => (
+                        <PartnerItem
+                          key={`partner-${stand.id}`}
+                          partner={stand}
+                          isJetton={true}
+                          isVisited={
+                            queryClient.getQueryData([
+                              visitStand.name,
+                              stand.id,
+                            ]) ??
+                            stand.is_visited ??
+                            false
+                          }
+                          onClick={() => handleVisitStand(stand.id)}
+                        />
+                      ))
+                    )}
+                  </div>
+                )
+              )}
+
+              <AfterParty stands={standsData} />
+              {groupedStands.afterPartyStands.map((stand: Stand) => (
+                <PartnerItem
+                  key={`afterparty-${stand.id}`}
+                  partner={stand}
+                  isJetton={false}
                   isVisited={
-                    queryClient.getQueryData([
-                      visitStand.name,
-                      segment.header.id,
-                    ]) ??
-                    segment.header.is_visited ??
+                    queryClient.getQueryData([visitStand.name, stand.id]) ??
+                    stand.is_visited ??
                     false
                   }
-                  onClick={() => handleVisitStand(segment.header.id)}
+                  onClick={() => handleVisitStand(stand.id)}
                 />
-              ) : (
-                segment.partners.map((stand: Stand) => (
-                  <PartnerItem
-                    key={`partner-${stand.id}`}
-                    partner={stand}
-                    isJetton={true}
-                    isVisited={
-                      queryClient.getQueryData([visitStand.name, stand.id]) ??
-                      stand.is_visited ??
-                      false
-                    }
-                    onClick={() => handleVisitStand(stand.id)}
-                  />
-                ))
-              )}
+              ))}
             </div>
-          )
-        )}
-
-        <AfterParty stands={standsData} />
-        {groupedStands.afterPartyStands.map((stand: Stand) => (
-          <PartnerItem
-            key={`afterparty-${stand.id}`}
-            partner={stand}
-            isJetton={false}
-            isVisited={
-              queryClient.getQueryData([visitStand.name, stand.id]) ??
-              stand.is_visited ??
-              false
-            }
-            onClick={() => handleVisitStand(stand.id)}
-          />
-        ))}
+          </div>
+        </div>
       </div>
     </div>
   );
