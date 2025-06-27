@@ -104,8 +104,8 @@ function App() {
   }
 
   return (
-    <div className="bg-black w-full px-4 py-4 overflow-hidden">
-      <div className="space-y-10 pb-24 overflow-hidden">
+    <div className="bg-black min-h-screen w-screen  px-4 py-4">
+      <div className="space-y-10 pb-24 overflow-y-hidden">
         <div className="space-y-3">
           <div className="space-y-2">
             {(groupedStands.layout ?? []).map(
