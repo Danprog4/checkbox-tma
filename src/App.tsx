@@ -104,8 +104,8 @@ function App() {
   }
 
   return (
-    <div className="bg-black pt-4 px-4 h-auto overflow-visible">
-      <div className="relative h-auto w-full rounded-b-none rounded-xl overflow-visible">
+    <div className="bg-black fixed pt-4 inset-0 px-4 h-full overflow-hidden pb-24">
+      <div className=" relative h-full w-full  rounded-b-none rounded-xl overflow-x-hidden overflow-y-hidden">
         {/* <div className="text-center flex justify-center pt-9 pb-7 px-[35px]">
           <div className="text-white text-nowrap text-3xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wide">
             список стендов
