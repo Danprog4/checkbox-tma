@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import "./App.css";
 
 import type { Stand } from "./types/stand";
