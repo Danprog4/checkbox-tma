@@ -2,12 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
 import type { Stand } from "./types/stand";
-import { PartnerItem } from "./components/PartnerItem";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authUser, getStands, visitStand, unvisitStand } from "./api";
 
-import { PressZoneHeader } from "./components/PressZoneHeader";
-import { AfterParty } from "./components/AfterParty";
 import { Loader } from "./components/Loader";
 
 import { useGroupStands } from "./hooks/useGroupStands";
