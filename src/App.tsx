@@ -101,7 +101,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen mx-auto bg-black items-center px-2">
+    <div className="flex flex-col h-screen w-screen mx-auto bg-black items-center">
       <div className="space-y-10 pb-24">
         <div className="space-y-3">
           <div className="space-y-2">
