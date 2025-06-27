@@ -107,7 +107,7 @@ function App() {
   }
 
   return (
-    <div className="bg-black pt-4 px-4 min-h-[10000px]">
+    <div className="bg-black pt-4 px-4">
       <div className="space-y-10 pb-24">
         <div className="space-y-3">
           <div className="space-y-2">
