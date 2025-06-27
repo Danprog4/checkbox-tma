@@ -12,9 +12,9 @@ import { Loader } from "./components/Loader";
 
 import { useGroupStands } from "./hooks/useGroupStands";
 
-type LayoutItem =
-  | { type: "big"; header: Stand }
-  | { type: "small"; partners: Stand[] };
+// type LayoutItem =
+//   | { type: "big"; header: Stand }
+//   | { type: "small"; partners: Stand[] };
 
 function App() {
   const [initData, setInitData] = useState<{ initData?: string }>();
