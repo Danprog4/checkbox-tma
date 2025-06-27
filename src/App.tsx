@@ -104,7 +104,7 @@ function App() {
   }
 
   return (
-    <div className="bg-black min-h-screen w-full p-4">
+    <div className="bg-black">
       <div className="space-y-2">
         {(groupedStands.layout ?? []).map(
           (segment: LayoutItem, index: number) => (
