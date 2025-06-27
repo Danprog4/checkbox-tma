@@ -102,7 +102,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen w-screen mx-auto bg-black items-center">
-      <div className="space-y-10 pb-24">
+      <div className="space-y-10 pb-24 w-full px-4">
         <div className="space-y-3">
           <div className="space-y-2">
             {(groupedStands.layout ?? []).map((segment, index) => (
